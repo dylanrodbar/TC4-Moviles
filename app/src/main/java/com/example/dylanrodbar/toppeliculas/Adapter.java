@@ -1,10 +1,9 @@
 package com.example.dylanrodbar.toppeliculas;
 
 import android.app.Activity;
-import android.content.ContentUris;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -19,45 +23,65 @@ import java.util.ArrayList;
  */
 
 public class Adapter extends ArrayAdapter<Movie> {
-
     private final Activity context;
     private ArrayList<Movie> movies = null;
 
     public Adapter(Activity context, ArrayList<Movie> movies) {
         super(context, R.layout.relative_grid, movies);
-        // TODO Auto-generated constructor stub
-
-        this.context=context;
+        this.context = context;
         this.movies = movies;
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
+
+
+    // create a new ImageView for each item referenced by the Adapter
+    public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.relative_grid, null,true);
 
-        TextView txtTitle = (TextView) rowView.findViewById(R.id.txtNameG);
-        TextView txtStars = (TextView) rowView.findViewById(R.id.txtStarsG);
-        TextView txtMetascore = (TextView) rowView.findViewById(R.id.txtMetascoreG);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.movieImageG);
 
-        txtTitle.setText(movies.get(position).getTitle());
-        txtStars.setText(movies.get(position).getStars());
-        txtMetascore.setText(movies.get(position).getMetascore());
+        TextView txtNameG = (TextView) rowView.findViewById(R.id.txtNameG);
+        TextView txtStarsG = (TextView) rowView.findViewById(R.id.txtStarsG);
+        TextView txtMetascoreG = (TextView) rowView.findViewById(R.id.txtMetascoreG);
+
+        txtNameG.setText(movies.get(position).getTitle());
+        txtStarsG.setText("Rating: " + movies.get(position).getStars());
+        txtMetascoreG.setText("Metascore: "+ movies.get(position).getMetascore());
+
+        /*URL url = null;
+        try {
+            url = new URL(movies.get(position).getImage());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
 
 
+        /*ImageView imageView;
+        if (convertView == null) {
+            // if it's not recycled, initialize some attributes
+            imageView = new ImageView(mContext);
+            imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setPadding(8, 8, 8, 8);
+        } else {
+            imageView = (ImageView) convertView;
+        }
 
+        imageView.setImageResource(mThumbIds[position]);*/
 
-        //Bitmap bm = BitmapFactory.decodeFile(songs.get(position).getPath());
-        //imageView.setImageResource(R.drawable.tfm);
-        //imageView.setImageBitmap(bm);
-
-        //Uri artworkUri = Uri.parse("content://media/external/audio/albumart");
-        //Uri path1 = ContentUris.withAppendedId(artworkUri, songs.get(position).getAlbumId());
-        //Glide.with(imageView.getContext()).load(path1).into(imageView);
-
-        //imageView.setImageBitmap(bm);
         return rowView;
+    }
 
-    }}
+
+
+
+}
 
